@@ -1,3 +1,4 @@
+com\example\flightmanagement\config\WebSecurityConfig.class
 com\example\flightmanagement\controller\FlightController.class
 com\example\flightmanagement\repository\FlightRepository.class
 com\example\flightmanagement\controller\UserController.class
@@ -8,6 +9,7 @@ com\example\flightmanagement\service\UserService.class
 com\example\flightmanagement\repository\BookingRepository.class
 com\example\flightmanagement\service\BookingService.class
 com\example\flightmanagement\service\FlightService.class
+com\example\flightmanagement\service\CustomUserDetailsService.class
 com\example\flightmanagement\model\Booking.class
 com\example\flightmanagement\model\Flight.class
 com\example\flightmanagement\model\User.class

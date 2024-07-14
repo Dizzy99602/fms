@@ -1,0 +1,5 @@
+# Created at 2024-07-14T19:51:01.320
+Boot Manifest-JAR contains absolute paths in classpath 'E:\coforge project\fms\flight-management-sys\flightmanagement\target\test-classes'
+Hint: <argLine>-Djdk.net.URLClassPath.disableClassPathURLCheck=true</argLine>
+'other' has different root
+
