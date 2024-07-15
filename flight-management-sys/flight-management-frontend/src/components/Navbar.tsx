@@ -3,33 +3,34 @@ import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import './Navbar.css';
 
-interface NavbarProps {
-  user: { id: number; username: string; role: string } | null;
-  onLogout: () => void;
-}
-
-const Navbar: React.FC<NavbarProps> = ({ user, onLogout }) => {
+const Navbar: React.FC = () => {
   const navigate = useNavigate();
+  const user = JSON.parse(localStorage.getItem('user') || '{}');
+  const isAdmin = user.role === 'ADMIN';
+  const isLoggedIn = Boolean(user.username);
 
   const handleLogout = () => {
-    onLogout();
+    localStorage.removeItem('user');
     navigate('/login');
   };
 
   return (
     <nav className="navbar">
-      <Link to="/">Home</Link>
-      <Link to="/search-flights">Search Flights</Link>
-      {user?.role === 'ADMIN' && <Link to="/add-flight">Add Flight</Link>}
-      {!user && <Link to="/register">Register</Link>}
-      {!user && <Link to="/login">Login</Link>}
-      {user && (
-        <div className="profile-dropdown">
-          <span>{user.username}</span>
-          <div className="profile-dropdown-content">
+      <Link to="/" className="nav-link">Home</Link>
+      <Link to="/search-flights" className="nav-link">Search Flights</Link>
+      {isAdmin && <Link to="/add-flight" className="nav-link">Add Flight</Link>}
+      {isLoggedIn ? (
+        <div className="profile-menu">
+          <span className="profile-icon">👤</span>
+          <div className="profile-dropdown">
             <button onClick={handleLogout}>Logout</button>
           </div>
         </div>
+      ) : (
+        <>
+          <Link to="/register" className="nav-link">Register</Link>
+          <Link to="/login" className="nav-link">Login</Link>
+        </>
       )}
     </nav>
   );

@@ -1,43 +1,48 @@
 // src/components/LoginUser.tsx
 import React, { useState } from 'react';
 import { loginUser } from '../api';
-import { useNavigate } from 'react-router-dom';
 import './LoginUser.css';
 
-interface LoginUserProps {
-  onLogin: (user: { id: number; username: string; role: string }) => void;
-}
-
-const LoginUser: React.FC<LoginUserProps> = ({ onLogin }) => {
+const LoginUser: React.FC = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const navigate = useNavigate();
+  const [error, setError] = useState('');
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     try {
       const response = await loginUser({ username, password });
-      const user = response.data;
-      localStorage.setItem('user', JSON.stringify(user));
-      onLogin(user);
-      navigate('/');
+      localStorage.setItem('user', JSON.stringify(response.data));
+      window.location.href = '/search-flights';
     } catch (error) {
-      console.error(error);
-      alert('Login failed. Please check your credentials.');
+      setError('Login failed. Please check your credentials.');
     }
   };
 
   return (
-    <div className="login-user-container">
+    <div className="login-container">
       <h2>Login</h2>
+      {error && <div className="error-message">{error}</div>}
       <form onSubmit={handleSubmit}>
-        <div>
-          <label>Username:</label>
-          <input type="text" value={username} onChange={(e) => setUsername(e.target.value)} />
+        <div className="form-group">
+          <label htmlFor="username">Username:</label>
+          <input
+            type="text"
+            id="username"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            required
+          />
         </div>
-        <div>
-          <label>Password:</label>
-          <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
+        <div className="form-group">
+          <label htmlFor="password">Password:</label>
+          <input
+            type="password"
+            id="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
         </div>
         <button type="submit">Login</button>
       </form>

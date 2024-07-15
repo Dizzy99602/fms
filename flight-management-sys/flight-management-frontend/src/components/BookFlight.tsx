@@ -1,16 +1,15 @@
 // src/components/BookFlight.tsx
 import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import { getFlightById, createBooking } from '../api';
+import { useParams } from 'react-router-dom';
+import { createBooking, getFlightById } from '../api';
 import './BookFlight.css';
 
 const BookFlight: React.FC = () => {
   const { flightId } = useParams<{ flightId: string }>();
-  const navigate = useNavigate();
-
   const [flight, setFlight] = useState<any>(null);
   const [passengerName, setPassengerName] = useState('');
   const [seatNumber, setSeatNumber] = useState('');
+  const [error, setError] = useState('');
 
   useEffect(() => {
     const fetchFlight = async () => {
@@ -19,73 +18,65 @@ const BookFlight: React.FC = () => {
         setFlight(response.data);
       } catch (error) {
         console.error(error);
-        alert('Failed to fetch flight details');
       }
     };
-
     fetchFlight();
   }, [flightId]);
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
+    const user = JSON.parse(localStorage.getItem('user') || '{}');
     if (flight && passengerName && seatNumber) {
       try {
-        const userId = JSON.parse(localStorage.getItem('user') || '{}').id;
-        await createBooking({
-          flightId: flight.id,
-          userId,
-          passengerName,
-          seatNumber,
-        });
+        await createBooking({ flightId: flight.id, userId: user.id, passengerName, seatNumber });
         alert('Flight booked successfully');
-        navigate('/search-flights');  // Redirect to search flights page
+        setPassengerName('');
+        setSeatNumber('');
       } catch (error) {
-        console.error(error);
-        alert('Error booking flight');
+        setError('Error booking flight');
       }
     } else {
-      alert('Please fill all fields');
+      setError('Please fill all fields');
     }
   };
 
+  if (!flight) return <p>Loading...</p>;
+
   return (
     <div className="book-flight-container">
-      {flight ? (
-        <>
-          <h2>Book Flight</h2>
-          <div className="flight-details">
-            <h3>Flight Details</h3>
-            <p><strong>Origin:</strong> {flight.origin}</p>
-            <p><strong>Destination:</strong> {flight.destination}</p>
-            <p><strong>Departure Date:</strong> {flight.departureDate}</p>
-            <p><strong>Price:</strong> ${flight.price}</p>
-            <p><strong>Available Seats:</strong> {flight.availableSeats}</p>
-          </div>
-          <form onSubmit={handleSubmit}>
-            <div>
-              <label>Passenger Name:</label>
-              <input
-                type="text"
-                value={passengerName}
-                onChange={(e) => setPassengerName(e.target.value)}
-                placeholder="Enter your name"
-              />
-            </div>
-            <div>
-              <label>Seat Number:</label>
-              <input
-                type="text"
-                value={seatNumber}
-                onChange={(e) => setSeatNumber(e.target.value)}
-                placeholder="Enter seat number"
-              />
-            </div>
-            <button type="submit">Book Flight</button>
-          </form>
-        </>
-      ) : (
-        <p>Loading flight details...</p>
-      )}
+      <h2>Book Flight</h2>
+      {error && <div className="error-message">{error}</div>}
+      <div className="flight-details">
+        <h3>Flight Details</h3>
+        <p><strong>Origin:</strong> {flight.origin}</p>
+        <p><strong>Destination:</strong> {flight.destination}</p>
+        <p><strong>Departure Date:</strong> {flight.departureDate}</p>
+        <p><strong>Return Date:</strong> {flight.returnDate}</p>
+        <p><strong>Price:</strong> ${flight.price}</p>
+      </div>
+      <form onSubmit={handleSubmit}>
+        <div className="form-group">
+          <label htmlFor="passengerName">Passenger Name:</label>
+          <input
+            type="text"
+            id="passengerName"
+            value={passengerName}
+            onChange={(e) => setPassengerName(e.target.value)}
+            required
+          />
+        </div>
+        <div className="form-group">
+          <label htmlFor="seatNumber">Seat Number:</label>
+          <input
+            type="text"
+            id="seatNumber"
+            value={seatNumber}
+            onChange={(e) => setSeatNumber(e.target.value)}
+            required
+          />
+        </div>
+        <button type="submit">Book Flight</button>
+      </form>
     </div>
   );
 };

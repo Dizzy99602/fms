@@ -4,62 +4,102 @@ import { createFlight } from '../api';
 import './AddFlight.css';
 
 const AddFlight: React.FC = () => {
-  const [flightData, setFlightData] = useState({
-    origin: '',
-    destination: '',
-    departureDate: '',
-    returnDate: '',
-    status: 'AVAILABLE',
-    price: 0,
-    availableSeats: 0
-  });
+  const [origin, setOrigin] = useState('');
+  const [destination, setDestination] = useState('');
+  const [departureDate, setDepartureDate] = useState('');
+  const [returnDate, setReturnDate] = useState('');
+  const [status, setStatus] = useState('AVAILABLE');
+  const [price, setPrice] = useState(0);
+  const [availableSeats, setAvailableSeats] = useState(0);
+  const [error, setError] = useState('');
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFlightData({ ...flightData, [e.target.name]: e.target.value });
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = async (event: React.FormEvent) => {
+    event.preventDefault();
     try {
-      await createFlight(flightData);
+      await createFlight({ origin, destination, departureDate, returnDate, status, price, availableSeats });
       alert('Flight added successfully');
+      setOrigin('');
+      setDestination('');
+      setDepartureDate('');
+      setReturnDate('');
+      setStatus('AVAILABLE');
+      setPrice(0);
+      setAvailableSeats(0);
     } catch (error) {
-      console.error(error);
-      alert('Error adding flight');
+      setError('Error adding flight');
     }
   };
 
   return (
     <div className="add-flight-container">
       <h2>Add Flight</h2>
+      {error && <div className="error-message">{error}</div>}
       <form onSubmit={handleSubmit}>
-        <div>
-          <label>Origin:</label>
-          <input type="text" name="origin" value={flightData.origin} onChange={handleChange} required />
+        <div className="form-group">
+          <label htmlFor="origin">Origin:</label>
+          <input
+            type="text"
+            id="origin"
+            value={origin}
+            onChange={(e) => setOrigin(e.target.value)}
+            required
+          />
         </div>
-        <div>
-          <label>Destination:</label>
-          <input type="text" name="destination" value={flightData.destination} onChange={handleChange} required />
+        <div className="form-group">
+          <label htmlFor="destination">Destination:</label>
+          <input
+            type="text"
+            id="destination"
+            value={destination}
+            onChange={(e) => setDestination(e.target.value)}
+            required
+          />
         </div>
-        <div>
-          <label>Departure Date:</label>
-          <input type="date" name="departureDate" value={flightData.departureDate} onChange={handleChange} required />
+        <div className="form-group">
+          <label htmlFor="departureDate">Departure Date:</label>
+          <input
+            type="date"
+            id="departureDate"
+            value={departureDate}
+            onChange={(e) => setDepartureDate(e.target.value)}
+            required
+          />
         </div>
-        <div>
-          <label>Return Date:</label>
-          <input type="date" name="returnDate" value={flightData.returnDate} onChange={handleChange} />
+        <div className="form-group">
+          <label htmlFor="returnDate">Return Date:</label>
+          <input
+            type="date"
+            id="returnDate"
+            value={returnDate}
+            onChange={(e) => setReturnDate(e.target.value)}
+          />
         </div>
-        <div>
-          <label>Status:</label>
-          <input type="text" name="status" value={flightData.status} onChange={handleChange} required />
+        <div className="form-group">
+          <label htmlFor="status">Status:</label>
+          <select id="status" value={status} onChange={(e) => setStatus(e.target.value)} required>
+            <option value="AVAILABLE">Available</option>
+            <option value="BOOKED">Booked</option>
+          </select>
         </div>
-        <div>
-          <label>Price:</label>
-          <input type="number" name="price" value={flightData.price} onChange={handleChange} required />
+        <div className="form-group">
+          <label htmlFor="price">Price:</label>
+          <input
+            type="number"
+            id="price"
+            value={price}
+            onChange={(e) => setPrice(Number(e.target.value))}
+            required
+          />
         </div>
-        <div>
-          <label>Available Seats:</label>
-          <input type="number" name="availableSeats" value={flightData.availableSeats} onChange={handleChange} required />
+        <div className="form-group">
+          <label htmlFor="availableSeats">Available Seats:</label>
+          <input
+            type="number"
+            id="availableSeats"
+            value={availableSeats}
+            onChange={(e) => setAvailableSeats(Number(e.target.value))}
+            required
+          />
         </div>
         <button type="submit">Add Flight</button>
       </form>
