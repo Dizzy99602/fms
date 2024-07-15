@@ -1,27 +1,26 @@
 // src/components/SearchFlights.tsx
 import React, { useState } from 'react';
 import { searchFlights } from '../api';
+import { Link } from 'react-router-dom';
+import './SearchFlights.css';
 
 const SearchFlights: React.FC = () => {
   const [origin, setOrigin] = useState('');
   const [destination, setDestination] = useState('');
   const [departureDate, setDepartureDate] = useState('');
   const [flights, setFlights] = useState<any[]>([]);
-  const [message, setMessage] = useState('');
 
   const handleSearch = async () => {
     try {
       const response = await searchFlights({ origin, destination, departureDate });
       setFlights(response.data);
-      setMessage('');
     } catch (error) {
-      setMessage('Search failed. Please try again.');
       console.error(error);
     }
   };
 
   return (
-    <div>
+    <div className="search-flights-container">
       <h2>Search Flights</h2>
       <div>
         <label>Origin:</label>
@@ -29,6 +28,7 @@ const SearchFlights: React.FC = () => {
           type="text"
           value={origin}
           onChange={(e) => setOrigin(e.target.value)}
+          placeholder="Enter origin"
         />
       </div>
       <div>
@@ -37,6 +37,7 @@ const SearchFlights: React.FC = () => {
           type="text"
           value={destination}
           onChange={(e) => setDestination(e.target.value)}
+          placeholder="Enter destination"
         />
       </div>
       <div>
@@ -48,14 +49,22 @@ const SearchFlights: React.FC = () => {
         />
       </div>
       <button onClick={handleSearch}>Search</button>
-      {message && <p>{message}</p>}
-      <ul>
-        {flights.map((flight: any) => (
-          <li key={flight.id}>
-            Flight ID: {flight.id} - Origin: {flight.origin} - Destination: {flight.destination} - Departure Date: {flight.departureDate} - Price: ${flight.price}
-          </li>
-        ))}
-      </ul>
+      <div>
+        {flights.length > 0 ? (
+          <ul>
+            {flights.map((flight) => (
+              <li key={flight.id}>
+                <p>Flight ID: {flight.id} - Destination: {flight.destination} - Departure Date: {flight.departureDate} - Price: ${flight.price}</p>
+                <Link to={`/book-flight/${flight.id}`}>
+                  <button>Book Flight</button>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p>No flights available</p>
+        )}
+      </div>
     </div>
   );
 };

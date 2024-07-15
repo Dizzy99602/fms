@@ -1,0 +1,65 @@
+/* src/components/SearchFlights.css */
+.search-flights-container {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.search-flights-container h2 {
+  margin-bottom: 20px;
+}
+
+.search-flights-container div {
+  margin-bottom: 10px;
+}
+
+.search-flights-container label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+.search-flights-container input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+
+.search-flights-container button {
+  background-color: #4CAF50;
+  color: white;
+  padding: 15px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.search-flights-container button:hover {
+  background-color: #45a049;
+}
+
+.search-flights-container ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.search-flights-container li {
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+}
+
+.search-flights-container li button {
+  background-color: #2196F3;
+  color: white;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.search-flights-container li button:hover {
+  background-color: #0b79d0;
+}

@@ -1,25 +1,28 @@
+// src/components/AddFlight.tsx
 import React, { useState } from 'react';
-import axios from 'axios';
+import { createFlight } from '../api';
+import './AddFlight.css';
 
 const AddFlight: React.FC = () => {
-  const [origin, setOrigin] = useState('');
-  const [destination, setDestination] = useState('');
-  const [departureDate, setDepartureDate] = useState('');
-  const [price, setPrice] = useState(0);
-  const [availableSeats, setAvailableSeats] = useState(0);
+  const [flightData, setFlightData] = useState({
+    origin: '',
+    destination: '',
+    departureDate: '',
+    returnDate: '',
+    status: 'AVAILABLE',
+    price: 0,
+    availableSeats: 0
+  });
 
-  const handleAddFlight = async (event: React.FormEvent) => {
-    event.preventDefault();
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFlightData({ ...flightData, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
     try {
-      const response = await axios.post('http://localhost:8080/api/flights', {
-        origin,
-        destination,
-        departureDate,
-        status: 'AVAILABLE',
-        price,
-        availableSeats,
-      });
-      alert('Flight added successfully!');
+      await createFlight(flightData);
+      alert('Flight added successfully');
     } catch (error) {
       console.error(error);
       alert('Error adding flight');
@@ -27,48 +30,36 @@ const AddFlight: React.FC = () => {
   };
 
   return (
-    <div>
+    <div className="add-flight-container">
       <h2>Add Flight</h2>
-      <form onSubmit={handleAddFlight}>
+      <form onSubmit={handleSubmit}>
         <div>
           <label>Origin:</label>
-          <input
-            type="text"
-            value={origin}
-            onChange={(e) => setOrigin(e.target.value)}
-          />
+          <input type="text" name="origin" value={flightData.origin} onChange={handleChange} required />
         </div>
         <div>
           <label>Destination:</label>
-          <input
-            type="text"
-            value={destination}
-            onChange={(e) => setDestination(e.target.value)}
-          />
+          <input type="text" name="destination" value={flightData.destination} onChange={handleChange} required />
         </div>
         <div>
           <label>Departure Date:</label>
-          <input
-            type="date"
-            value={departureDate}
-            onChange={(e) => setDepartureDate(e.target.value)}
-          />
+          <input type="date" name="departureDate" value={flightData.departureDate} onChange={handleChange} required />
+        </div>
+        <div>
+          <label>Return Date:</label>
+          <input type="date" name="returnDate" value={flightData.returnDate} onChange={handleChange} />
+        </div>
+        <div>
+          <label>Status:</label>
+          <input type="text" name="status" value={flightData.status} onChange={handleChange} required />
         </div>
         <div>
           <label>Price:</label>
-          <input
-            type="number"
-            value={price}
-            onChange={(e) => setPrice(Number(e.target.value))}
-          />
+          <input type="number" name="price" value={flightData.price} onChange={handleChange} required />
         </div>
         <div>
           <label>Available Seats:</label>
-          <input
-            type="number"
-            value={availableSeats}
-            onChange={(e) => setAvailableSeats(Number(e.target.value))}
-          />
+          <input type="number" name="availableSeats" value={flightData.availableSeats} onChange={handleChange} required />
         </div>
         <button type="submit">Add Flight</button>
       </form>
