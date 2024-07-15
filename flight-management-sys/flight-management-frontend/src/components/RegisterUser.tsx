@@ -6,34 +6,52 @@ import './RegisterUser.css';
 const RegisterUser: React.FC = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [role, setRole] = useState('USER');
+  const [role, setRole] = useState('USER'); // Default role is USER
+  const [error, setError] = useState('');
 
-  const handleRegister = async (event: React.FormEvent) => {
+  const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     try {
       await registerUser({ username, password, role });
-      alert('User registered successfully');
+      alert('Registration successful');
+      window.location.href = '/login';
     } catch (error) {
-      console.error(error);
-      alert('Error registering user');
+      setError('Registration failed. Please try again.');
     }
   };
 
   return (
-    <div className="register-user-container">
-      <h2>Register User</h2>
-      <form onSubmit={handleRegister}>
-        <div>
-          <label>Username:</label>
-          <input type="text" value={username} onChange={(e) => setUsername(e.target.value)} />
+    <div className="register-container">
+      <h2>Register</h2>
+      {error && <div className="error-message">{error}</div>}
+      <form onSubmit={handleSubmit}>
+        <div className="form-group">
+          <label htmlFor="username">Username:</label>
+          <input
+            type="text"
+            id="username"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            required
+          />
         </div>
-        <div>
-          <label>Password:</label>
-          <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
+        <div className="form-group">
+          <label htmlFor="password">Password:</label>
+          <input
+            type="password"
+            id="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
         </div>
-        <div>
-          <label>Role:</label>
-          <select value={role} onChange={(e) => setRole(e.target.value)}>
+        <div className="form-group">
+          <label htmlFor="role">Role:</label>
+          <select
+            id="role"
+            value={role}
+            onChange={(e) => setRole(e.target.value)}
+          >
             <option value="USER">User</option>
             <option value="ADMIN">Admin</option>
           </select>
