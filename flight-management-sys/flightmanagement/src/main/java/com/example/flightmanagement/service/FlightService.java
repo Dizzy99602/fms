@@ -10,6 +10,7 @@ import java.util.List;
 
 @Service
 public class FlightService {
+
     @Autowired
     private FlightRepository flightRepository;
 
@@ -19,5 +20,13 @@ public class FlightService {
 
     public Flight addFlight(Flight flight) {
         return flightRepository.save(flight);
+    }
+
+    public List<Flight> getAllFlights() {
+        return flightRepository.findAll();
+    }
+
+    public Flight getFlightById(Long id) {
+        return flightRepository.findById(id).orElseThrow(() -> new RuntimeException("Flight not found"));
     }
 }

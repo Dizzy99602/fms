@@ -11,6 +11,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/flights")
 public class FlightController {
+
     @Autowired
     private FlightService flightService;
 
@@ -24,5 +25,15 @@ public class FlightController {
     @PostMapping("/add")
     public Flight addFlight(@RequestBody Flight flight) {
         return flightService.addFlight(flight);
+    }
+
+    @GetMapping
+    public List<Flight> getAllFlights() {
+        return flightService.getAllFlights();
+    }
+
+    @GetMapping("/{id}")
+    public Flight getFlightById(@PathVariable Long id) {
+        return flightService.getFlightById(id);
     }
 }
